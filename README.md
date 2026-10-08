@@ -1,4 +1,4 @@
-# Proyecto 01 · [ITACA]
+# Proyecto 01 · ITACA
 
 ## Descripción y objetivo
 
