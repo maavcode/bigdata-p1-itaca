@@ -1,20 +1,18 @@
-# Datos y credenciales
-data/raw/
-data/*.csv
-data/*.json
+# Ignore Credentials
 .env
-*.pem
 
-# Entornos Python
+# Ignore the data/exported content leaving the .gitkeep file
+data/exported/**/*
+!data/exported/.gitkeep
+# Ignore the data/raw content leaving the .gitkeep file
+data/raw/**/*
+!data/raw/.gitkeep
+# Ignore the data/curated content leaving the .gitkeep file
+data/curated/**/*
+!data/curated/.gitkeep
+# Ignore the data/staged content leaving the .gitkeep file
+data/staged/**/*
+!data/staged/.gitkeep
+
+# Entorno Python
 .venv/
-__pycache__/
-*.pyc
-
-# Notebooks
-.ipynb_checkpoints/
-
-# Docker
-docker-volumes/
-
-# MkDocs
-site/
