@@ -18,7 +18,7 @@ graph LR
 
 | Fuente | URL / origen | Formato | Frecuencia de actualización | Licencia | Última ingesta |
 |---|---|---|---|---|---|
-| ITACA (Conselleria de Educación) | Facilitada por el docente | XML (`alumnos`, `calificaciones`, `contenidos`, `cursos`, `grupos`) | Única | — | — |
+| ITACA (Conselleria de Educación) | Facilitada por el docente | XML | Única | — | — |
 
 ## Estructura del repositorio
 
@@ -27,7 +27,7 @@ graph LR
 | `ingesta/` | Scripts de lectura de los XML, conversión a JSON y carga en MongoDB |
 | `etl/` | Transformaciones con Spark |
 | `dashboard/` | Informe de Power BI |
-| `data/exported/` | XML exportados de ITACA (`Analisis_Academico/<curso>/*.xml`) |
+| `data/exported/` | XML exportados de ITACA |
 | `data/raw/` | Datos en bruto: salida de la primera ingesta (XML convertido a JSON) |
 | `data/staged/` | Datos intermedios |
 | `data/curated/` | Datos finales para el dashboard |
@@ -61,6 +61,25 @@ MongoDB 7 queda expuesto en `localhost:27017`.
 **Problemas encontrados y solución:** —
 
 **Resultado:** —
+
+### Bloque 1 · Ingesta
+
+**Objetivo:** leer los XML de ITACA y dejar en `data/raw/` un JSON por tabla (`cursos`, `alumnos`, `contenidos`, `calificaciones`) con el NIA anonimizado. La tabla `grupos` se ignora.
+
+**Pasos realizados:**
+
+- Análisis de los XML de `data/exported/Analisis_Academico/<curso>/`: los datos son atributos de cada nodo, no elementos hijos.
+- Escritura de `ingesta/ingesta_itaca_xml.py`.
+- El script recorre los 5 cursos (2021-22 a 2025-26) y junta cada tabla en un único JSON.
+- `Anyo` se toma del atributo `curso` de la cabecera `<centro>`.
+- Solo se extraen los campos del modelo; el resto no llega al JSON.
+- El NIA se sustituye por `sha256(NIA)[:10]` en `alumnos.NIA` y `calificaciones.alumno`, calculado una vez por NIA y reutilizado.
+
+**Ejecución:** `python3 ingesta/ingesta_itaca_xml.py` desde la raíz del repositorio.
+
+**Problemas encontrados y solución:** —
+
+**Resultado:** 4 JSON generados en `data/raw/`.
 
 ## Decisiones técnicas
 
